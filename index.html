@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ubl^2</title>
+  <style type="text/css">
+  @font-face {
+    font-family: 'SuperRetro';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Super Retro'), url('static/Super_Retro_M54.ttf') format('truetype');
+  }
+  body {
+    font-family:SuperRetro;
+    padding:0;
+    margin:0;
+    zoom:1;
+    overflow-x:hidden;
+    display:none;
+  }
+  #container {
+    position:absolute;
+    top:0;
+    left:0;
+  }
+  #ubl2 {
+    width:471px;
+  }
+  #base {
+    position:absolute;
+    background-color:black;
+    top:938px;
+    left:0px;
+    width:471px;
+    height:486px;
+  }
+  h1 {
+    display:block;
+    position:absolute;
+    top:904px;
+    left:18px;
+    width:480px;
+    color:#ee2e2b;
+  }
+  h1 span {
+    display:block;
+  }
+  h1 span span {
+    display:inline;
+    font-family: Arial;
+    font-weight: black;
+  }
+  h1 span.w {
+    color:white;
+  }
+  #info {
+    position:absolute;
+    top:1235px;
+    left:18px;
+    font-size:15px;
+    line-height:18px;
+    color:white;
+    width:500px;
+  }
+  #info span {
+    font-family: Arial;
+    font-weight: black;
+    color:#ee2e2b;
+    letter-spacing:4px;
+    font-size:12px;
+    line-height:14px;
+  }
+  #entry {
+    position:absolute;
+    top:30px;
+    left:30px;
+  }
+  #entry input {
+    display:block;
+    width:100%;
+  }
+  a {
+    color:#ee2e2b;
+    -webkit-animation-name: attention;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-direction: alternate;
+  }
+  
+  @-webkit-keyframes attention {
+    from {
+      color:#670a0b;
+    }
+    to {
+      color:#ee2e2b;
+    }
+  }
+  
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  <script>
+  $(function() {
+    
+    var speed = 1;
+    
+    var win = $(window)
+    var body = $('body');
+    var container = $('#container')
+    var BaseWidth = 471;
+    
+    function zoomToMouth() {
+      body.css('overflow-y', 'hidden');
+      var width = win.width();
+      var mouseWidth = 70;
+      container.css({
+        left: '-191px',
+        top: '-589px',
+        zoom: width / mouseWidth
+      });
+    }
+    zoomToMouth();
+    
+    function reveal() {
+      $('#entry').animate({
+        zoom: 10,
+        opacity: 0
+      }, 1000 * speed, function() {
+        $(this).hide();
+      });
+      var height = win.height()
+      container.animate({
+        zoom: height / container.height(),
+        top: 0,
+        left: 0
+      }, 4000 * speed, function() {
+        setTimeout(function() {
+          body.css('overflow-y', 'auto')
+          var width = win.width();
+          container.animate({
+            zoom: width / container.width()
+          }, 2000 * speed, function() {
+            var zoom = parseFloat(container.css('zoom'), 10);
+            var targetZoom = win.height() / container.height();
+            win.bind('scroll', function() {
+              var top = win.scrollTop();
+              var z = zoom * ( 1 - top / win.height());
+              if(z < targetZoom) {
+                z = targetZoom;
+              }
+              container.css('zoom', z);
+            })
+          });
+        }, 1000 * speed);
+      })
+    }
+    
+
+    $('#entry a.nocheck').click(function() {
+      $('.obscurity,.register').hide();
+      reveal();
+      return false;
+    });
+    
+    $('#entry a.check').click(function() {
+      $.get('/check', {
+        check: $('#code').val()
+      }, function(ret) {
+        if(ret.match(/^http/)) {
+          $('.register').attr('href', ret);
+          reveal();
+        } else {
+          alert('FAIL');
+        }
+      });
+      return false;
+    });
+    
+    body.show();
+  })
+  </script>
+</head>
+<body>
+  <div id=container>
+    <img src="static/ubl2.svg" id=ubl2>
+    <div id=base></div>
+    <h1>
+      <span style="font-size:35px;line-height:35px;">Anlass</span>
+      <span style="font-size:64px;line-height:64px;">Hochzeit</span>
+      <span style="font-size:39px;line-height:39px;" class=w>Veranstalter</span>
+      <span style="font-size:37px;line-height:37px;">Svenja <span>&amp;</span> Malte</span>
+      <span style="font-size:49px;line-height:51px;" class=w>25. Juli 2011</span>
+      <span style="font-size:36px;line-height:38px;" class=w>Party ab 18 Uhr</span>
+    </h1>
+    <div id=info>
+      <div>
+        <span>&#9733;&#9733;</span>
+        Badesachen nicht vergessen
+        <span class=r>&#9733;&#9733;</span>
+      </div>
+      <div>
+        <a class=register href="#" target=_blank>Anmeldung bis 31.03.2011</a>
+        <span class=r>&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      </div>
+      <div>
+        <span>&#9733;&#9733;&#9733;</span>
+        Spiele verboten
+        <span class=r>&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      </div>
+      <div class=obscurity>
+        Location Ollerlohstr. 74. Elmshorn
+      </div>
+      <div>
+        <span>&#9733;&#9733;</span>
+        Zelten vor Ort moeglich
+        <span class=r>&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      </div>
+      <div>
+        Spenden erbeten in Geldform
+        <span class=r>&#9733;&#9733;&#9733;&#9733;</span>
+      </div>
+      <div>
+        <a class=register href="#" target=_blank>Register Now</a>
+      </div>
+    </div>
+  </div>
+  <div id=entry>
+    Enter your Invitation Code<br>
+    <input id=code>
+    <a href="#" class=check>Submit</a><br>
+    <a href="#" class=nocheck>I don't have a code</a>
+  </div>
+</body>
+</html>
